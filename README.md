@@ -69,7 +69,8 @@ This means the `studentVle` table in PostgreSQL stores **one row per student × 
 **Notebook:** [`notebooks/oulad_phase1_eda.ipynb`](notebooks/oulad_phase1_eda.ipynb)  
 **Report:** [`Docs/Phase1_DataCleaning_EDA_Report.md`](Docs/Phase1_DataCleaning_EDA_Report.md)
 
-> Reads directly from CSV files — no database connection required.
+> Loads all data from the **PostgreSQL database** built in Phase 0 via SQLAlchemy (`postgresql://localhost:5432/oulad`). Requires the DB to be running locally.  
+> `studentVle` (8.4M rows) is queried in chunks of 500,000 rows to avoid memory overflow.
 
 ### Data Cleaning Decisions
 
