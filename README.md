@@ -221,6 +221,8 @@ All saved to `notebooks/processed/`:
 ---
 
 ```
-## Contributers
-- **Aditya Kanbargi - MS Data Science, GWU — Data Science Capstone 2026**
-**Sanjana Kadambe Muralidhar - MS Data Science, GWU — Data Science Capstone 2026**
+## Contributers - GWU Data Science Capstone 2026
+
+- **Aditya Kanbargi - MS Data Science, GWU**
+- **Sanjana Kadambe Muralidhar - MS Data Science, GWU**
+
