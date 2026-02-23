@@ -19,7 +19,7 @@
 
 ## Dataset
 
-**Source:** [Open University Learning Analytics Dataset (OULAD)](https://analyse.kmi.open.ac.uk/open_dataset)
+**Source:** [Open University Learning Analytics Dataset (OULAD)](https://www.nature.com/articles/sdata2017171)
 
 | Table | Rows | Description |
 |---|---|---|
