@@ -1,0 +1,230 @@
+// Open University Learning Analytics Dataset (OULAD) Schema
+// This dataset contains data about courses, students, and their interactions with Virtual Learning Environment (VLE)
+// Source: https://analyse.kmi.open.ac.uk/open-dataset
+// Published in Nature Scientific Data: https://www.nature.com/articles/sdata2017171
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Courses table contains information about available modules and their presentations
+/// Each course is identified by a module code and presentation code
+/// Presentation codes: "B" for presentations starting in February, "J" for presentations starting in October
+model Course {
+  /// Code name of the module, serves as the identifier (e.g., "AAA", "BBB", "CCC")
+  codeModule String @db.VarChar(45)
+  
+  /// Code name of the presentation (e.g., "2013J", "2014B") - year + B/J indicator
+  codePresentation String @db.VarChar(45)
+  
+  /// Length of the module-presentation in days
+  modulePresentationLength Int?
+
+  // Relationships
+  studentInfo         StudentInfo[]
+  studentRegistration StudentRegistration[]
+  assessments         Assessment[]
+  vle                 Vle[]
+  studentVle          StudentVle[]
+
+  @@id([codeModule, codePresentation])
+  @@map("courses")
+}
+
+/// StudentInfo table contains demographic information about students together with their final results
+/// This is the core student demographic and outcome data for learning analytics
+model StudentInfo {
+  /// Identification code for the module on which the student is registered
+  codeModule String @db.VarChar(45)
+  
+  /// Identification code of the presentation during which the student is registered
+  codePresentation String @db.VarChar(45)
+  
+  /// Unique identification number for the student
+  idStudent Int
+  
+  /// Student's gender (M/F)
+  gender String? @db.VarChar(3)
+  
+  /// Geographic region where the student lived while taking the module-presentation
+  region String? @db.VarChar(45)
+  
+  /// Highest student education level on entry to the module presentation
+  highestEducation String? @db.VarChar(45)
+  
+  /// Index of Multiple Deprivation band of the place where the student lived
+  /// IMD is a measure of relative deprivation for small areas in the UK
+  imdBand String? @db.VarChar(16)
+  
+  /// Band of the student's age (e.g., "0-35", "35-55", "55<=")
+  ageBand String? @db.VarChar(16)
+  
+  /// Number of times the student has attempted this module
+  numOfPrevAttempts Int?
+  
+  /// Total number of credits for the modules the student is currently studying
+  studiedCredits Int?
+  
+  /// Indicates whether the student has declared a disability (Y/N)
+  disability String? @db.VarChar(3)
+  
+  /// Student's final result in the module-presentation (Pass, Fail, Withdrawn, Distinction)
+  finalResult String? @db.VarChar(45)
+
+  // Relationships
+  course              Course                @relation(fields: [codeModule, codePresentation], references: [codeModule, codePresentation])
+  studentRegistration StudentRegistration[]
+  studentVle          StudentVle[]
+
+  @@id([codeModule, codePresentation, idStudent])
+  @@map("studentInfo")
+}
+
+/// StudentRegistration table contains information about when students registered for module presentations
+/// Also records unregistration dates for students who withdrew from courses
+model StudentRegistration {
+  /// Identification code for the module
+  codeModule String @db.VarChar(45)
+  
+  /// Identification code of the presentation
+  codePresentation String @db.VarChar(45)
+  
+  /// Unique identification number for the student
+  idStudent Int
+  
+  /// Date of student's registration relative to module start (negative = before start, 0 = start day)
+  dateRegistration Int?
+  
+  /// Student's unregistration date relative to module start
+  /// Empty for students who completed the course
+  dateUnregistration Int?
+
+  // Relationships
+  course      Course      @relation(fields: [codeModule, codePresentation], references: [codeModule, codePresentation])
+  studentInfo StudentInfo @relation(fields: [codeModule, codePresentation, idStudent], references: [codeModule, codePresentation, idStudent])
+
+  @@id([codeModule, codePresentation, idStudent])
+  @@map("studentRegistration")
+}
+
+/// Assessments table contains information about assessments in module-presentations
+/// Each presentation typically has multiple assessments followed by a final exam
+model Assessment {
+  /// Identification code of the module to which the assessment belongs
+  codeModule String @db.VarChar(45)
+  
+  /// Identification code of the presentation to which the assessment belongs
+  codePresentation String @db.VarChar(45)
+  
+  /// Unique identification number of the assessment
+  idAssessment Int
+  
+  /// Type of assessment: TMA (Tutor Marked), CMA (Computer Marked), or Exam (Final Exam)
+  assessmentType String? @db.VarChar(45)
+  
+  /// Final submission date relative to module start (0 = start day)
+  /// Missing exam date means it's at the end of the last presentation week
+  date Int?
+  
+  /// Weight of the assessment in percentage
+  /// Exams typically have weight 100%, other assessments sum to 100%
+  weight Decimal? @db.Decimal(10, 2)
+
+  // Relationships
+  course            Course              @relation(fields: [codeModule, codePresentation], references: [codeModule, codePresentation])
+  studentAssessment StudentAssessment[]
+
+  @@id([idAssessment])
+  @@map("assessments")
+}
+
+/// StudentAssessment table contains results of students' assessments
+/// Records assessment submissions and scores for learning analytics
+model StudentAssessment {
+  /// Identification number of the assessment
+  idAssessment Int
+  
+  /// Unique identification number for the student
+  idStudent Int
+  
+  /// Date of student submission relative to module start
+  dateSubmitted Int?
+  
+  /// Status flag indicating assessment result transferred from previous presentation (0/1)
+  isBanked Int?
+  
+  /// Student's score in this assessment (0-100)
+  /// Scores below 40 are interpreted as Fail
+  score Decimal? @db.Decimal(10, 2)
+
+  // Relationships
+  assessment Assessment @relation(fields: [idAssessment], references: [idAssessment])
+
+  @@id([idAssessment, idStudent])
+  @@map("studentAssessment")
+}
+
+/// VLE table contains information about available materials in the Virtual Learning Environment
+/// These are learning resources like HTML pages, PDF files, etc. that students access online
+model Vle {
+  /// Unique identification number of the VLE material
+  idSite Int
+  
+  /// Identification code for the module
+  codeModule String @db.VarChar(45)
+  
+  /// Identification code of the presentation
+  codePresentation String @db.VarChar(45)
+  
+  /// Type/role associated with the module material (e.g., "resource", "oucontent", "url")
+  activityType String? @db.VarChar(45)
+  
+  /// Week from which the material is planned to be used
+  weekFrom Int?
+  
+  /// Week until which the material is planned to be used
+  weekTo Int?
+
+  // Relationships
+  course     Course       @relation(fields: [codeModule, codePresentation], references: [codeModule, codePresentation])
+  studentVle StudentVle[]
+
+  @@id([idSite])
+  @@map("vle")
+}
+
+/// StudentVle table contains information about each student's interactions with VLE materials
+/// This is the largest dataset with over 10 million interaction records
+/// Critical for analyzing student engagement patterns and predicting academic performance
+model StudentVle {
+  /// Identification code for the module
+  codeModule String @db.VarChar(45)
+  
+  /// Identification code of the module presentation
+  codePresentation String @db.VarChar(45)
+  
+  /// Unique identification number for the student
+  idStudent Int
+  
+  /// Identification number for the VLE material
+  idSite Int
+  
+  /// Date of student's interaction with the material relative to module start
+  date Int
+  
+  /// Number of times the student interacts with the material on that day
+  sumClick Int?
+
+  // Relationships
+  course      Course      @relation(fields: [codeModule, codePresentation], references: [codeModule, codePresentation])
+  studentInfo StudentInfo @relation(fields: [codeModule, codePresentation, idStudent], references: [codeModule, codePresentation, idStudent])
+  vle         Vle         @relation(fields: [idSite], references: [idSite])
+
+  @@id([codeModule, codePresentation, idStudent, idSite, date])
+  @@map("studentVle")
+}
