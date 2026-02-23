@@ -35,7 +35,7 @@
 
 ## Phase 0 — Data Infrastructure & Schema Design
 
-**Scripts:** [`scripts/etl.js`](scripts/etl.js) · [`scripts/load_student_vle.js`](scripts/load_student_vle.js)  
+**Scripts:** [`scripts/etl.js`](scripts/etl.js) 
 **ORM:** Prisma (`prisma/schema.prisma`) with PostgreSQL adapter
 
 ### What We Did
@@ -220,6 +220,7 @@ All saved to `notebooks/processed/`:
 
 ---
 
+```
 ## Contributers
 **Aditya Kanbargi - MS Data Science, GWU — Data Science Capstone 2026**
 **Sanjana Kadambe Muralidhar - MS Data Science, GWU — Data Science Capstone 2026**
