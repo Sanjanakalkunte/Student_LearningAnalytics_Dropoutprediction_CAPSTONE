@@ -37,6 +37,50 @@ The dashboard provides:
 - **Clusters Tab** — 4 behavioral segments with engagement scatter plot
 - **Modules Tab** — Course-level dropout rates and risk concentration
 
+## 📸 Dashboard Screenshots
+
+### Overview Tab
+*Main landing page with key performance indicators and cohort-level insights*
+
+![Overview Tab](screenshots/overview_tab.png)
+
+### ML Models Tab
+*Model comparison, ROC curves, and LightGBM feature importance analysis*
+
+![ML Models Tab](screenshots/ml_models_tab.png)
+
+### Students Tab
+*Interactive table of high-risk students with detailed SHAP explanations*
+
+![Students Tab](screenshots/students_tab.png)
+
+### Risk Flags Tab
+*Statistical validation of early warning indicators and dual-layer architecture*
+
+![Risk Flags Tab](screenshots/risk_flags_tab.png)
+
+### SHAP Explainability Tab
+*Global feature importance and model interpretability analysis*
+
+![SHAP Tab](screenshots/shap_tab.png)
+
+### Clusters Tab
+*Student behavioral segmentation and intervention strategies*
+
+![Clusters Tab](screenshots/clusters_tab.png)
+
+### Modules Tab
+*Course-level dropout analysis and risk concentration*
+
+![Modules Tab](screenshots/modules_tab.png)
+
+### Student Detail View
+*Individual student risk profile with SHAP waterfall explanation*
+
+![Student Detail](screenshots/student_detail.png)
+
+> **Note:** Screenshots show the interactive dashboard running in a web browser. The actual dashboard includes hover effects, clickable elements, and dynamic filtering capabilities not visible in static images.
+
 ---
 
 ## 🚀 Quick Start
