@@ -203,9 +203,8 @@ Download: [OULAD on Analyse](https://analyse.kmi.open.ac.uk/open_dataset)
 
 **GWU Data Science Capstone 2026**
 - **Aditya Kanbargi** — MS Data Science, GWU  
-  *Classification modeling, ML pipeline, dashboard development*
 - **Sanjana Kadambe Muralidhar** — MS Data Science, GWU  
-  *Feature engineering, clustering, early warning framework*
+
 
 ---
 
@@ -219,5 +218,5 @@ OULAD dataset is licensed under [CC BY 4.0](https://creativecommons.org/licenses
 ## 🙏 Acknowledgments
 
 - Open University UK for releasing the OULAD dataset
-- Professor [Name] for guidance and feedback throughout the capstone
+- Professor Abdi Awl for guidance and feedback throughout the capstone
 - GWU Data Science program faculty and peers
